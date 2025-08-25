@@ -1,6 +1,5 @@
 package blockchain;
 
-import com.google.gson.Gson;
 import java.time.Instant;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -19,24 +18,14 @@ public class Block {
         this.hash_ = computeHash();
     }
 
-    public String computeHash() {
-        String payload = new Gson().toJson(new Object() {
-            final String data = Block.this.data_;
-            final String prevHash = Block.this.prevHash_;
-            final String timestamp = Block.this.timestamp_;
-        });
-        return Sha256(payload);
-    }
-
-
     public static String Sha256(String input){
         try{
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
-            StringBuffer hexString = new StringBuffer();
-            for(int i = 0; i < hash.length; i++){
-                String hex = Integer.toHexString(0xff & hash[i]);
-                if(hex.length() == 1) hexString.append('0');
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
                 hexString.append(hex);
             }
             return hexString.toString();
@@ -44,12 +33,10 @@ public class Block {
             throw new RuntimeException("SHA-256 not available", e);
         }
     }
-/*
     public String computeHash(){
         return Sha256(prevHash_ + data_ + timestamp_);
     }
 
- */
 
     @Override
     public String toString() {
