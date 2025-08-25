@@ -1,1 +1,1 @@
-# blockchain.blockchain-project
+# Simple Blockchain Project
